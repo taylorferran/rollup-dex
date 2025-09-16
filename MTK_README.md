@@ -59,9 +59,16 @@ cast call --rpc-url http://57.129.73.144:31133/ 0x68278160572a0d0bcca3a3fac6dbc9
 
 ## 🔧 **Contract Addresses**
 
+### **Rollup B (Chain ID: 88888) - With Swapper**
 - **MTK1**: `0x68278160572a0d0bcca3a3fac6dbc93aff7e950f`
 - **MTK2**: `0x0d4f9d2ddb8c1f571d8c26b67b55d62efc502893`
 - **MTKMultiTokenSwapper**: `0x48788c254a7fc36f4f089d798d522089184b9650`
+- **RPC URL**: `http://57.129.73.144:31133/`
+
+### **Rollup A (Chain ID: 77777) - Tokens Only**
+- **MTK1**: `0x68278160572a0d0bcca3a3fac6dbc93aff7e950f` (Same address via CREATE2)
+- **MTK2**: `0x0d4f9d2ddb8c1f571d8c26b67b55d62efc502893` (Same address via CREATE2)
+- **RPC URL**: `http://57.129.73.156:31130/`
 
 ## **Swap Function:**
 ```solidity
@@ -111,9 +118,18 @@ cast call --rpc-url http://57.129.73.144:31133/ 0x48788c254a7fc36f4f089d798d5220
 
 ## 🌐 **Network Details**
 
+### **Rollup B (Trading Chain)**
 - **Network**: Rollup B
 - **Chain ID**: 88888
 - **RPC URL**: http://57.129.73.144:31133/
+- **Features**: Full trading with MTKMultiTokenSwapper
+- **Private Key**: [YOUR_PRIVATE_KEY]
+
+### **Rollup A (Token Storage)**
+- **Network**: Rollup A
+- **Chain ID**: 77777
+- **RPC URL**: http://57.129.73.156:31130/
+- **Features**: MTK1 and MTK2 tokens only (no swapper)
 - **Private Key**: [YOUR_PRIVATE_KEY]
 
 ## 🔍 **Swap Function Parameter Explanation**
@@ -162,7 +178,9 @@ cast send --rpc-url http://57.129.73.144:31133/ --private-key [YOUR_PRIVATE_KEY]
 
 ## 💡 **Additional Commands**
 
-### **Price Preview (Check before swapping):**
+### **Rollup B (Trading Chain) Commands:**
+
+#### **Price Preview (Check before swapping):**
 ```bash
 # Preview MTK1 → MTK2 swap
 cast call --rpc-url http://57.129.73.144:31133/ 0x48788c254a7fc36f4f089d798d522089184b9650 "getSwapPrice(uint8,uint8,uint256)" 0 1 1000000000000000000000
@@ -171,12 +189,12 @@ cast call --rpc-url http://57.129.73.144:31133/ 0x48788c254a7fc36f4f089d798d5220
 cast call --rpc-url http://57.129.73.144:31133/ 0x48788c254a7fc36f4f089d798d522089184b9650 "getSwapPrice(uint8,uint8,uint256)" 1 0 1000000000000000000000
 ```
 
-### **Check Swapper Reserves:**
+#### **Check Swapper Reserves:**
 ```bash
 cast call --rpc-url http://57.129.73.144:31133/ 0x48788c254a7fc36f4f089d798d522089184b9650 "getReserves()"
 ```
 
-### **Mint Additional Tokens:**
+#### **Mint Additional Tokens on Rollup B:**
 ```bash
 # Mint 1000 MTK1
 cast send --rpc-url http://57.129.73.144:31133/ --private-key [YOUR_PRIVATE_KEY] 0x68278160572a0d0bcca3a3fac6dbc93aff7e950f "mint(address,uint256)" [YOUR_ADDRESS] 1000000000000000000000
@@ -185,20 +203,42 @@ cast send --rpc-url http://57.129.73.144:31133/ --private-key [YOUR_PRIVATE_KEY]
 cast send --rpc-url http://57.129.73.144:31133/ --private-key [YOUR_PRIVATE_KEY] 0x0d4f9d2ddb8c1f571d8c26b67b55d62efc502893 "mint(address,uint256)" [YOUR_ADDRESS] 1000000000000000000000
 ```
 
-### **Burn Tokens (if needed):**
-```bash
-# Burn 100 MTK1
-cast send --rpc-url http://57.129.73.144:31133/ --private-key [YOUR_PRIVATE_KEY] 0x68278160572a0d0bcca3a3fac6dbc93aff7e950f "burn(address,uint256)" [YOUR_ADDRESS] 100000000000000000000
+### **Rollup A (Token Storage) Commands:**
 
-# Burn 100 MTK2
-cast send --rpc-url http://57.129.73.144:31133/ --private-key [YOUR_PRIVATE_KEY] 0x0d4f9d2ddb8c1f571d8c26b67b55d62efc502893 "burn(address,uint256)" [YOUR_ADDRESS] 100000000000000000000
+#### **Mint Tokens on Rollup A:**
+```bash
+# Mint 1,000,000 MTK1 on Rollup A
+cast send --rpc-url http://57.129.73.156:31130/ --private-key [YOUR_PRIVATE_KEY] 0x68278160572a0d0bcca3a3fac6dbc93aff7e950f "mint(address,uint256)" [YOUR_ADDRESS] 1000000000000000000000000
+
+# Mint 1,000,000 MTK2 on Rollup A
+cast send --rpc-url http://57.129.73.156:31130/ --private-key [YOUR_PRIVATE_KEY] 0x0d4f9d2ddb8c1f571d8c26b67b55d62efc502893 "mint(address,uint256)" [YOUR_ADDRESS] 1000000000000000000000000
+```
+
+#### **Check Token Balances on Rollup A:**
+```bash
+# Check MTK1 balance on Rollup A
+cast call --rpc-url http://57.129.73.156:31130/ 0x68278160572a0d0bcca3a3fac6dbc93aff7e950f "balanceOf(address)" [YOUR_ADDRESS]
+
+# Check MTK2 balance on Rollup A
+cast call --rpc-url http://57.129.73.156:31130/ 0x0d4f9d2ddb8c1f571d8c26b67b55d62efc502893 "balanceOf(address)" [YOUR_ADDRESS]
+```
+
+#### **Burn Tokens on Rollup A:**
+```bash
+# Burn 100 MTK1 on Rollup A
+cast send --rpc-url http://57.129.73.156:31130/ --private-key [YOUR_PRIVATE_KEY] 0x68278160572a0d0bcca3a3fac6dbc93aff7e950f "burn(address,uint256)" [YOUR_ADDRESS] 100000000000000000000
+
+# Burn 100 MTK2 on Rollup A
+cast send --rpc-url http://57.129.73.156:31130/ --private-key [YOUR_PRIVATE_KEY] 0x0d4f9d2ddb8c1f571d8c26b67b55d62efc502893 "burn(address,uint256)" [YOUR_ADDRESS] 100000000000000000000
 ```
 
 ## ⚠️ **Important Notes**
 
 - **All tokens use 18 decimals** (1 token = 1000000000000000000 wei)
-- **Fee**: 0.3% fee applied to all swaps
+- **Fee**: 0.3% fee applied to all swaps (Rollup B only)
 - **Slippage**: No built-in slippage protection - use `getSwapPrice()` to check expected output
-- **Approvals**: Only need to approve once per token for unlimited swaps
-- **Chain ID**: 88888 (Rollup B)
+- **Approvals**: Only need to approve once per token for unlimited swaps (Rollup B only)
 - **CREATE2**: Both tokens deployed with CREATE2 for deterministic addresses across chains
+- **Same Addresses**: MTK1 and MTK2 have identical addresses on both Rollup A and Rollup B
+- **Trading**: Only available on Rollup B (88888) with the MTKMultiTokenSwapper contract
+- **Token Storage**: Rollup A (77777) is for token minting/burning only
